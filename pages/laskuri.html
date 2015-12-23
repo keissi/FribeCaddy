@@ -1,0 +1,50 @@
+
+<div id=initializeGame class=container>
+    <h2>Initialize new game</h2>
+    <div class=col-md-4>
+        <span class=listblock>
+        <label>Pick a player:</label>
+        <select class=list ng-model=available size=5>
+            <option ng-dblclick= addPlayer("add") ng-repeat="p in notpickedPlayers track by $index" value="{{ p }}">{{ p }}</option>   
+        </select>
+        </span>
+    </div>
+    <div class=col-md-4>
+        <span id=buttonblock style="height: inherit">
+                <button ng-click=addPlayer("add")>Add player to game</button>
+                <button ng-click=addPlayer("remove")>Remove player from game</button>
+        </span>
+    </div>
+    <div class=col-md-4>
+        <span class=listblock>
+    <label>Picked players:</label>
+    <select class=list ng-model=picked size=5 >
+            <option ng-dblclick= addPlayer("remove") ng-repeat="p in pickedPlayers track by $index" value="{{ p }}">{{ p }}</option>
+    </select>
+        </span>
+    </div>
+    <div class=col-md-4>
+        <span class=listblock>
+        <label>Pick a course:</label>
+        <select class=list ng-model=pickedCourse>
+            <option  ng-repeat="c in courselist track by $index" value="{{ c.nimi }}">{{ c.nimi }}</option>   
+        </select>
+        </span>
+    </div>
+    <div class=col-md-4>
+        <button ng-model=startGame>Start the game</button>
+    </div>
+</div>
+<div id=laskuri class=container>
+    <h2>Scorecard</h2>
+    <table class="table table-bordered">
+        <tr>
+            <th></th><th style="text-align: center" ng-repeat="p in pickedPlayers track by $index"> {{ p }}</th>
+        </tr>
+        
+        
+    </table>
+    
+    
+</div>
+

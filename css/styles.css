@@ -1,0 +1,205 @@
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f5f5f5;
+}
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+/*HEADER*/
+
+
+
+/* NAVBARSTUFF */
+
+
+
+.navbar.navbar-default{
+  
+  max-height: 200px;
+  min-height: 150px;
+  
+}
+
+.navbar-header {
+  
+  min-height: inherit;
+ 
+  
+}
+
+.nav.nav-tabs.navbar-right{
+ 
+ height: 100%;
+ 
+}
+
+
+
+
+.navbar-brand{
+  
+    min-height: inherit;
+    width: 450px;
+}
+
+.container{
+  width: auto;
+  min-height: inherit;
+  max-height: inherit;
+  padding: 0 15px;
+}
+.container .text-muted {
+  margin: 20px 0;
+}
+
+/*Login page*/
+
+.login {
+  
+  padding-left: 30px;
+  
+}
+
+#signup {
+  
+  position:absolute;
+  bottom: 0;
+  
+}
+
+/*Logoimage*/
+
+
+
+#logo {
+  
+  height: 100%;
+  width: 100%;
+ 
+  
+}
+
+
+/*FOOTER*/
+
+.footer-content {
+  
+  padding-left: 35px;
+  
+}
+
+/*Content*/
+
+.content {
+  margin:auto;
+  display: block;
+  width:80%;
+  min-height: 600px;
+  
+}
+
+/*LOGOUT BUTTON*/
+
+#logout {
+  color: red;
+}
+
+/*Laskuri*/
+
+.scoreField{
+  text-align: center;
+}
+
+.list{
+  min-width: 250px;
+  min-height: 30px;
+  
+  
+}
+
+#initializeGame h2{
+  display:block;
+  width:25%;
+}
+
+#buttonblock{
+  display:inline-block;
+  text-align: center;
+  
+}
+
+.listblock{
+  width: 250px;
+  display:inline-block;
+  vertical-align: top;
+}
+
+button {
+  margin:2px;
+}
+
+#initializeGame{
+  display: block;
+  
+}
+
+/*Player&CourseSITE*/
+
+label {
+  padding-right: 10px;
+}
+
+.row{
+  padding:30px;
+  width: 100%;
+}
+
+.searchbar {
+  width:100%;
+  padding: 30px;
+  text-align: right;
+}
+
+
+
+.playerCard{
+  border: 1px solid black;
+ 
+  
+  
+}
+
+.playerCard:hover{
+  background-color: #00ffff;
+}
+
+.courseCard{
+  border: 1px solid black;
+ 
+  
+  
+}
+
+.courseCard:hover{
+  background-color: #00ffff;
+}
+
+
+

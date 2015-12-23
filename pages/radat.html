@@ -1,0 +1,14 @@
+<div class="searchbar">
+    <div>
+    <label>Search for course:</label><input type="text" class="search" ng-model=searchString placeholder="enter coursename here" size="40"/>
+    <button ng-click="searchForCourse()">Search</button>
+    </div>
+</div>
+<div class="data">
+    <div class=row>
+        <div ng-repeat="n in courses track by $index" class="courseCard col-md-4">
+            <h3>{{ n.nimi }}</h3>
+            <div style="display: inline-block"><label>Par:</label>{{n.par}}<label style="padding-left: 20px">Väyliä:</label> {{n.vayla_lkm}}</div>  
+        </div>
+    </div>
+</div>

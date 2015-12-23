@@ -1,0 +1,14 @@
+
+<div class="searchbar">
+    <div>
+    <label>Search for player:</label><input type="text" class="search" ng-model=searchString placeholder="enter playername here" size="40"/>
+    <button ng-click="searchForPlayer()">Search</button>
+    </div>
+</div>
+<div class="data">
+    <div class=row>
+        <div ng-repeat="n in players track by $index" class="playerCard col-md-4">
+            <h3>{{ n.username }}</h3>
+        </div>
+    </div>
+</div>
