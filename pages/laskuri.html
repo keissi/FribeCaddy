@@ -27,19 +27,27 @@
         <span class=listblock>
         <label>Pick a course:</label>
         <select class=list ng-model=pickedCourse>
-            <option  ng-repeat="c in courselist track by $index" value="{{ c.nimi }}">{{ c.nimi }}</option>   
+            <option ng-repeat="c in courselist track by $index" value="{{ c }}">{{ c.nimi }}</option>   
         </select>
         </span>
     </div>
     <div class=col-md-4>
-        <button ng-model=startGame>Start the game</button>
+        <button ng-click=startGame()>Start the game</button>
     </div>
 </div>
 <div id=laskuri class=container>
     <h2>Scorecard</h2>
-    <table class="table table-bordered">
+    <table ng-model=scores class="table table-bordered">
         <tr>
-            <th></th><th style="text-align: center" ng-repeat="p in pickedPlayers track by $index"> {{ p }}</th>
+            <th></th>
+            <th style="text-align: center" ng-repeat="players in scoreCards track by $index">{{ players.name }}</th>
+        </tr>
+        <tr ng-repeat="courses in scoreCards[0].scoreCard track by $index">
+            <td>Course {{ $index + 1 }} </td>
+            <td ng-repeat="players in scoreCards track by $index"><input ng-click=players.total() type=number ng-model=players.scoreCard[$parent.$index] min=0></td>
+        </tr>
+        <tr>
+            <td>Total: </td><td ng-repeat="players in scoreCards track by $index">{{ players.sum }}</td>
         </tr>
         
         

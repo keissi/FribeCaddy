@@ -70,9 +70,13 @@ fribaApp.factory('scoreCardKeeper', function(){
    
    var keeper = {};
    keeper.scoreCards = [];
-   keeper.addScoreCard = function(a){
-        keeper.scoreCards.push(a);
+   keeper.course = {};
+   keeper.addScoreCard = function(player){
+        keeper.scoreCards.push(player);
     
+   }
+   keeper.setCourse = function(course){
+        keeper.course = course;
    }
    keeper.getScoreCard = function(){
         return keeper.scoreCards;
@@ -88,12 +92,20 @@ fribaApp.factory('scoreCardKeeper', function(){
 fribaApp.factory('playerCreator', function(){
     
     var creator = {}
-    creator.createPlayer = function(a){
+    creator.createPlayer = function(name){
         var player = {};
-        player.name = a;
+        player.name = name;
         player.scoreCard = [];
+        player.sum;
         player.addScore = function (score, idx) {
             player.scoreCard[idx] = score;
+        }
+        player.total = function (){
+            var sum = 0;
+            for (var i = 0; i < this.scoreCard.length; i++) {
+                sum = sum + this.scoreCard[i];
+            }
+            player.sum = sum;
         }
         return player;    
     }
@@ -111,15 +123,39 @@ fribaApp.controller('mainController', ['$scope', function($scope) {
 }]);
 
 fribaApp.controller('laskuriController', ['$scope', 'databaseService', 'playerCreator', 'scoreCardKeeper', function($scope, databaseService, playerCreator, scoreCardKeeper) {
-    //functions
-    var scoreCard = scoreCardKeeper.getScoreCard();
-    if (scoreCard.length == 0) {
-        //code
-   
+    
+    var scoreCards = scoreCardKeeper;
+    $scope.scoreCards = scoreCards.scoreCards;
+    $scope.notpickedPlayers = [];
+    $scope.pickedPlayers = [];
+        $scope.playerlist;
+        $scope.courselist = [];
         $scope.picked;
         $scope.available;
-        $scope.notpickedPlayers = [];
-        $scope.pickedPlayers = [];
+        $scope.pickedCourse;
+        if ($scope.playerlist == null) {
+            databaseService.getPlayers("").then(function(response){
+               $scope.playerlist = response.data;
+               for (var i = 0; i < response.data.length; i++){
+                    $scope.notpickedPlayers.push(response.data[i].username);
+               }
+                $scope.available = $scope.notpickedPlayers[0];
+                
+            });
+        }
+        if ($scope.courselist.length == 0) {
+            databaseService.getCourses("").then(function(response){
+                for (var i = 0; i < response.data.length; i++) {
+                    
+                    var course = {}
+                    course.nimi = response.data[i].nimi;
+                    course.par = response.data[i].par;
+                    course.vayla_lkm = response.data[i].vayla_lkm;
+                    $scope.courselist.push(course);
+                }
+            });
+        }
+   
         
         
         $scope.addPlayer = function(a){
@@ -136,6 +172,7 @@ fribaApp.controller('laskuriController', ['$scope', 'databaseService', 'playerCr
             }
             $scope.notpickedPlayers.splice(userIdx, 1);
             $scope.available="";
+            $scope.picked=$scope.pickedPlayers[0];
             }
             
             if (a=="remove" && $scope.pickedPlayers.length > 0 && $scope.picked != "") {
@@ -150,39 +187,28 @@ fribaApp.controller('laskuriController', ['$scope', 'databaseService', 'playerCr
             $scope.picked="";
             }
              
-            $scope.startGame = function() {
-                for (var i = 0; i < pickedPlayers.length; i++) {
-                    
-                }
-                
-            }
+           
                     
         }
             
-      
         
         
-        $scope.playerlist;
-        $scope.courselist;
-        if ($scope.playerlist == null) {
-            databaseService.getPlayers("").then(function(response){
-               $scope.playerlist = response.data;
-               for (var i = 0; i < response.data.length; i++){
-                    $scope.notpickedPlayers.push(response.data[i].username);
-               }
+        
+        $scope.startGame = function (args) {
+            if ($scope.pickedPlayers.length > 0 && $scope.pickedCourse != null) {
+                    var course = JSON.parse($scope.pickedCourse);
+                    for(var i = 0; i < $scope.pickedPlayers.length; i++){
+                        var player = playerCreator.createPlayer($scope.pickedPlayers[i]);
+                        for(var k = 0; k < course.vayla_lkm; k++){
+                            player.scoreCard.push(k);
+                        }
+                        scoreCards.addScoreCard(player);
+                    }
+                 console.log($scope.scoreCards);   
                 
-                
-            });
+            }
+            
         }
-        if ($scope.courselist == null) {
-            databaseService.getCourses("").then(function(response){
-                for (var i = 0; i < response.data.length; i++) {
-                    $scope.courselist = response.data;
-                    
-                }
-            });
-        }
-     }
  
 }]);
 
