@@ -1,5 +1,5 @@
 
-<div id=initializeGame class=container>
+<div id=initializeGame class=container ng-hide=init>
     <h2>Initialize new game</h2>
     <div class=col-md-4>
         <span class=listblock>
@@ -35,23 +35,31 @@
         <button ng-click=startGame()>Start the game</button>
     </div>
 </div>
-<div id=laskuri class=container>
+<div id=laskuri class=container ng-show=init>
     <h2>Scorecard</h2>
     <table ng-model=scores class="table table-bordered">
         <tr>
-            <th></th>
-            <th style="text-align: center" ng-repeat="players in scoreCards track by $index">{{ players.name }}</th>
+            <th class=scoreHeader> {{ course.name }} </th>
+            <th class=scoreHeader ng-repeat="players in scoreCards track by $index">{{ players.name }}</th>
         </tr>
-        <tr ng-repeat="courses in scoreCards[0].scoreCard track by $index">
-            <td>Course {{ $index + 1 }} </td>
-            <td ng-repeat="players in scoreCards track by $index"><input ng-click=players.total() type=number ng-model=players.scoreCard[$parent.$index] min=0></td>
+        <tr ng-repeat="courses in course.pars track by $index">
+            <td>Course <strong>{{ $index + 1 }}</strong> <br> Par <strong>{{courses}}</strong> </td>
+            <td ng-repeat="players in scoreCards track by $index"><span class=scoreField><div id=score>{{ players.scoreCard[$parent.$index] }} ( {{players.scoreCard[$parent.$index] - courses }} )</div></span><span class=plusminusbar><img class=plusminus src="images/plus.png" ng-click="players.addScore(1, $parent.$index)">
+            <img class=plusminus src="images/minus.png" ng-click="players.addScore(-1, $parent.$index)"></td></span>
         </tr>
         <tr>
-            <td>Total: </td><td ng-repeat="players in scoreCards track by $index">{{ players.sum }}</td>
+            <td class=scoreHeader>Total: </td><td style="text-align: center; font-size: 160%" ng-repeat="players in scoreCards track by $index">{{ players.sum }} ({{course.total}}) {{players.sum - course.total}}</td>
         </tr>
         
         
     </table>
+    
+    
+</div>
+<div id=saveScores class=container ng-show=finished>
+    <div>
+        <button>Save Scores</button>
+    </div>
     
     
 </div>

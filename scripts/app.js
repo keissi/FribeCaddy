@@ -63,6 +63,23 @@ fribaApp.service('databaseService', function($http) {
     
    });
    };
+   
+   this.getHoles = function(courseNimi) {
+    
+    return $http({
+   method: 'GET',
+   url: "includes/getHoles.php?hole=" + courseNimi
+   }).then(function successCallBack(response){
+        return response;
+   }, function errorCallback(response) {
+          
+    
+   });
+    
+    
+    
+   };
+   
     
 }); 
     
@@ -71,18 +88,24 @@ fribaApp.factory('scoreCardKeeper', function(){
    var keeper = {};
    keeper.scoreCards = [];
    keeper.course = {};
+   keeper.started = false;
    keeper.addScoreCard = function(player){
         keeper.scoreCards.push(player);
+        keeper.started=true;
     
    }
-   keeper.setCourse = function(course){
-        keeper.course = course;
+   keeper.setCourse = function(course, pars, total){
+        keeper.course.name = course;
+        keeper.course.pars = pars
+        keeper.course.total = total;
+        
    }
    keeper.getScoreCard = function(){
         return keeper.scoreCards;
    }
     keeper.resetScoreCards = function(){
        keeper.scoreCards = [];
+       keeper.started=false;
     }
     return keeper;
   
@@ -98,7 +121,13 @@ fribaApp.factory('playerCreator', function(){
         player.scoreCard = [];
         player.sum;
         player.addScore = function (score, idx) {
-            player.scoreCard[idx] = score;
+            if (score == -1 && player.scoreCard[idx] == 0) {
+                //Do nothing
+            }
+            else {
+                player.scoreCard[idx] += score;
+            }
+            player.total();
         }
         player.total = function (){
             var sum = 0;
@@ -125,14 +154,22 @@ fribaApp.controller('mainController', ['$scope', function($scope) {
 fribaApp.controller('laskuriController', ['$scope', 'databaseService', 'playerCreator', 'scoreCardKeeper', function($scope, databaseService, playerCreator, scoreCardKeeper) {
     
     var scoreCards = scoreCardKeeper;
+    $scope.init;
     $scope.scoreCards = scoreCards.scoreCards;
     $scope.notpickedPlayers = [];
     $scope.pickedPlayers = [];
+    $scope.course = scoreCards.course;
         $scope.playerlist;
         $scope.courselist = [];
         $scope.picked;
         $scope.available;
         $scope.pickedCourse;
+    if (scoreCards.started == false) {
+        $scope.init = false;
+    }
+    else {
+        $scope.init = true;
+    }
         if ($scope.playerlist == null) {
             databaseService.getPlayers("").then(function(response){
                $scope.playerlist = response.data;
@@ -200,13 +237,22 @@ fribaApp.controller('laskuriController', ['$scope', 'databaseService', 'playerCr
                     for(var i = 0; i < $scope.pickedPlayers.length; i++){
                         var player = playerCreator.createPlayer($scope.pickedPlayers[i]);
                         for(var k = 0; k < course.vayla_lkm; k++){
-                            player.scoreCard.push(k);
+                            player.scoreCard.push(0);
                         }
                         scoreCards.addScoreCard(player);
                     }
-                 console.log($scope.scoreCards);   
+                $scope.init = true;
+                databaseService.getHoles(course.nimi).then(function(response){
+                    var parArray = [];
+                    for (var i = 0; i < response.data.length; i++) {
+                        parArray.push(response.data[i].par);  
+                    }
+                    scoreCards.setCourse(course.nimi, parArray, course.par);
+                    
+                });
                 
             }
+            
             
         }
  

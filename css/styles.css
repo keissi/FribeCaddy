@@ -123,6 +123,7 @@ body {
 
 /*Laskuri*/
 
+
 .scoreField{
   text-align: center;
 }
@@ -157,6 +158,50 @@ button {
 
 #initializeGame{
   display: block;
+  
+}
+
+.scoreHeader {
+  font-size: 150%;
+  text-align: center;
+  text-decoration: underline;
+  
+}
+
+
+
+.scoreField {
+  display: inline-block;
+  width:  60%;
+  height: 100%;
+  vertical-align: middle;
+  text-align: center;
+}
+
+#score {
+  font-weight: bold;
+  font-size: 150%;
+  padding:7% 0;
+}
+
+.plusminusbar {
+  text-align: center;
+  display: inline-block;
+  width:40%;
+  float:right;
+}
+
+.plusminus {
+  max-height:25%;
+  max-width: 25%;
+  margin: 5px;
+}
+
+.plusminus:active {
+  background-color: #00ffff;
+  margin: 5px;
+  max-height:25%;
+  max-width: 25%;
   
 }
 
