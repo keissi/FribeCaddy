@@ -75,11 +75,22 @@ fribaApp.service('databaseService', function($http) {
           
     
    });
-    
-    
-    
-   };
+   };  
    
+   this.insertRound = function(course) {
+    
+    return $http({
+            method: 'POST',
+            url: "includes/insertKierros.php",
+            data: course
+        }).then(function successCallBack(data, status, headers, config){
+            console.log(data);
+        }, function errorCallback(response) {
+          console.log("error");
+    
+   });
+   
+   };
     
 }); 
     
@@ -89,12 +100,14 @@ fribaApp.factory('scoreCardKeeper', function(){
    keeper.scoreCards = [];
    keeper.course = {};
    keeper.started = false;
+   keeper.finished = false;
    keeper.addScoreCard = function(player){
         keeper.scoreCards.push(player);
         keeper.started=true;
     
    }
-   keeper.setCourse = function(course, pars, total){
+   keeper.setCourse = function(id, course, pars, total){
+        keeper.course.id = id;
         keeper.course.name = course;
         keeper.course.pars = pars
         keeper.course.total = total;
@@ -106,6 +119,16 @@ fribaApp.factory('scoreCardKeeper', function(){
     keeper.resetScoreCards = function(){
        keeper.scoreCards = [];
        keeper.started=false;
+    }
+    keeper.checkScores = function(){
+        keeper.finished = true;
+        for(var i = 0; i < keeper.scoreCards.length; i++){
+            var player = keeper.scoreCards[i];
+            player.checkScores();
+            if (player.finished == false) {
+                keeper.finished = false;
+            }
+        }
     }
     return keeper;
   
@@ -120,12 +143,14 @@ fribaApp.factory('playerCreator', function(){
         player.name = name;
         player.scoreCard = [];
         player.sum;
+        player.finished = false;
         player.addScore = function (score, idx) {
             if (score == -1 && player.scoreCard[idx] == 0) {
                 //Do nothing
             }
             else {
                 player.scoreCard[idx] += score;
+               
             }
             player.total();
         }
@@ -135,6 +160,14 @@ fribaApp.factory('playerCreator', function(){
                 sum = sum + this.scoreCard[i];
             }
             player.sum = sum;
+        }
+        player.checkScores = function(){
+            player.finished = true;
+            for (var i = 0; i < this.scoreCard.length; i++) {
+                if (this.scoreCard[i] == 0) {
+                    player.finished = false;
+                }
+            }
         }
         return player;    
     }
@@ -164,6 +197,7 @@ fribaApp.controller('laskuriController', ['$scope', 'databaseService', 'playerCr
         $scope.picked;
         $scope.available;
         $scope.pickedCourse;
+        $scope.finished = false;
     if (scoreCards.started == false) {
         $scope.init = false;
     }
@@ -185,6 +219,7 @@ fribaApp.controller('laskuriController', ['$scope', 'databaseService', 'playerCr
                 for (var i = 0; i < response.data.length; i++) {
                     
                     var course = {}
+                    course.id = response.data[i].rata_id;
                     course.nimi = response.data[i].nimi;
                     course.par = response.data[i].par;
                     course.vayla_lkm = response.data[i].vayla_lkm;
@@ -247,7 +282,7 @@ fribaApp.controller('laskuriController', ['$scope', 'databaseService', 'playerCr
                     for (var i = 0; i < response.data.length; i++) {
                         parArray.push(response.data[i].par);  
                     }
-                    scoreCards.setCourse(course.nimi, parArray, course.par);
+                    scoreCards.setCourse(course.id, course.nimi, parArray, course.par);
                     
                 });
                 
@@ -255,6 +290,23 @@ fribaApp.controller('laskuriController', ['$scope', 'databaseService', 'playerCr
             
             
         }
+        
+        $scope.finishCourse = function() {
+            scoreCards.checkScores();
+            if (scoreCards.finished == true) {
+                $scope.finished = true;
+            }
+            else {
+                window.alert("Missing scores");
+            }
+        }
+        
+        $scope.saveGame = function() {
+            console.log($scope.course);
+            databaseService.insertRound(scoreCards);
+            
+        }
+        
  
 }]);
 

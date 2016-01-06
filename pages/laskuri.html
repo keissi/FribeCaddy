@@ -44,7 +44,8 @@
         </tr>
         <tr ng-repeat="courses in course.pars track by $index">
             <td>Course <strong>{{ $index + 1 }}</strong> <br> Par <strong>{{courses}}</strong> </td>
-            <td ng-repeat="players in scoreCards track by $index"><span class=scoreField><div id=score>{{ players.scoreCard[$parent.$index] }} ( {{players.scoreCard[$parent.$index] - courses }} )</div></span><span class=plusminusbar><img class=plusminus src="images/plus.png" ng-click="players.addScore(1, $parent.$index)">
+            <td ng-repeat="players in scoreCards track by $index"><span class=scoreField><div id=score>{{ players.scoreCard[$parent.$index] }} ( {{players.scoreCard[$parent.$index] - courses }} )</div>
+            </span><span class=plusminusbar><img class=plusminus src="images/plus.png" ng-click="players.addScore(1, $parent.$index)">
             <img class=plusminus src="images/minus.png" ng-click="players.addScore(-1, $parent.$index)"></td></span>
         </tr>
         <tr>
@@ -53,12 +54,12 @@
         
         
     </table>
-    
+    <button ng-click="finishCourse()">Finish Course</button>
     
 </div>
 <div id=saveScores class=container ng-show=finished>
-    <div>
-        <button>Save Scores</button>
+    <div style="text-align:center">
+        <button ng-click="saveGame()">Save Scores</button>
     </div>
     
     
